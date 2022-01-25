@@ -30,3 +30,31 @@ module.exports.renderEditReviewForm = async function (req,res){
     );
     res.render('review/edit', {review});
 };
+
+module.exports.updateReview = async function(req, res){
+    const review = await Review.findByPk(
+        req.params.id
+    );
+        await Review.update({
+            customer_name: req.body.customer_name,
+            subject: req.body.subject,
+            rating: req.body.rating,
+            description: req.body.description
+        }, {
+            where: {
+                id: req.params.id
+            }
+        }
+    );
+    res.redirect(`/products/profile/${review.product_id}`);
+};
+
+module.exports.deleteReview = async function(req, res){
+    const review = await Review.findByPk(req.params.id);
+    await Review.destroy({
+        where: {
+            id: req.params.id
+        }
+    });
+    res.redirect(`/products/profile/${review.product_id}`);
+};
